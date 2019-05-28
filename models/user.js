@@ -15,3 +15,4 @@ export const user = (sequelize, DataTypes) => {
         }
     });
 };
+
