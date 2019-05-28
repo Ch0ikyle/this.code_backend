@@ -20,9 +20,7 @@ export const Register = async (ctx) => {
         console.log(`이미 존재하는 아이디입니다. / 입력된 아이디 : ${ctx.request.body.id}`);
 
         ctx.status = 400;
-        ctx.body = {
-            "error" : "003"
-        }
+        ctx.body = false;
         return;
     }
 
@@ -37,6 +35,7 @@ export const Register = async (ctx) => {
     });
 
     console.log(`새로운 회원이 저장되었습니다. / 아이디 : ${id}`);
+    ctx.body = true;
 }
 
 export const Login = async (ctx) => {
@@ -51,18 +50,14 @@ export const Login = async (ctx) => {
     if(!founded.length){
         console.log(`Login - 존재하지 않는 계정입니다. / 입력된 아이디 : ${ctx.request.body.id}`);
         ctx.status = 400;
-        ctx.body = {
-            "error" : "004"
-        }
+        ctx.body = false;
         return;
     }
 
     if(founded[0].password != ctx.request.body.password){
         console.log(`Login - 비밀번호를 틀렸습니다.`);
         ctx.status = 400;
-        ctx.body = {
-            "error" : "005"
-        }
+        ctx.body = false;
         return;
     }
 
