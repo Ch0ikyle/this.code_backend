@@ -3,6 +3,7 @@ import path from 'path';
 
 import { user } from './user';
 import { problem } from './problem';
+import { answer } from './answer';
 
 const config = require(path.join(__dirname, '..', 'config', 'dbconfig.json'))['codeup'];
 
@@ -15,5 +16,6 @@ const sequelize = new Sequelize(
 
 const User = user(sequelize, Sequelize);
 const Problem = problem(sequelize, Sequelize);
+const Answer = answer(sequelize, Sequelize);
 
-export { sequelize, Sequelize, User, Problem };  
+export { sequelize, Sequelize, User, Problem, Answer };  
