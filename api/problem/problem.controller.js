@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { User, Problem, Answer, ProblemLog } from '../../models';
+import { User, Problem, Answer, ProblemLog, ProblemCount } from '../../models';
 import { decodeToken } from '../../lib/token';
 import request from 'request-promise';
 // .env 파일의 환경 변수 불러오기
@@ -20,16 +20,20 @@ export const ListProblem = async (ctx) => {
 
     const list = await Problem.findAll();
 
-    let list_name = new Array();
-    
-    list.forEach(element => {
-        list_name.push(element.title); 
-    });
+    const numbers = await ProblemCount.findAll();
 
-    ctx.body = {
-        "name" : list_name,
-        "user" : corrected.correct
-    };
+    let giveData = new Array();
+
+    for(var i=0;i<10;i++){
+        giveData.push({
+            "name" : list[i].title,
+            "user" : corrected.correct[i],
+            "tryNum" : numbers[i].trynum,
+            "corNum" : numbers[i].cornum
+        });
+    }
+
+    ctx.body = giveData;
 }
 
 export const DetailProblem = async (ctx) => {
@@ -91,6 +95,14 @@ export const AnswerCheck = async (ctx) => {
         });        
     }
 
+    await ProblemCount.findOne({
+        where : { index : index }
+    }).then(count => {
+        count.update({
+            "trynum" : count.trynum + 1
+        });
+    });
+
     if(isCorrect){
         await User.findOne({
             where : {
@@ -114,6 +126,14 @@ export const AnswerCheck = async (ctx) => {
                 "username" : user.username,
                 "problemnum" : index,
                 "isCorrect" : true
+            });
+
+            ProblemCount.findOne({
+                where : { index : index }
+            }).then(count => {
+                count.update({
+                    "cornum" : count.cornum + 1
+                });
             });
 
         });
