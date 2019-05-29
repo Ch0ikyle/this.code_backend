@@ -9,9 +9,16 @@ export const user = (sequelize, DataTypes) => {
             type : DataTypes.STRING,
             allowNull : false
         },
-        nickname : {
+        username : {
             type : DataTypes.STRING(50),
             allowNull : false
+        },
+        description : {
+            type : DataTypes.STRING,
+            allowNull : false
+        },
+        correctInfo : {
+            type : DataTypes.TEXT
         }
     });
 };
