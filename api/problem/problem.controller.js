@@ -1,10 +1,21 @@
 import crypto from 'crypto';
 import { User, Problem } from '../../models';
+import { decodeToken } from '../../lib/token';
 // .env 파일의 환경 변수 불러오기
 import dotenv from 'dotenv';
 dotenv.config();
 
 export const ListProblem = async (ctx) => {
+    const token = ctx.header.token;
+    const decoded = await decodeToken(token);
+
+    const user = await User.findAll({
+        where : {
+            id : decoded.id
+        }
+    });
+
+    const corrected = JSON.parse(user[0].correctInfo);
 
     const list = await Problem.findAll();
 
@@ -15,7 +26,8 @@ export const ListProblem = async (ctx) => {
     });
 
     ctx.body = {
-        "name" : list_name
+        "name" : list_name,
+        "user" : corrected.correct
     };
 }
 
