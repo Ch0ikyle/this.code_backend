@@ -40,16 +40,18 @@ export const Register = async (ctx) => {
         "password" : ctx.request.body.password,
         "username" : ctx.request.body.username,
         "description" : ctx.request.body.description,
-        "correctInfo" : JSON.stringify(correct)
+        "correctInfo" : JSON.stringify(correct),
+        "point" : 0
     }).then((result) => {
         console.log(`새로운 회원이 저장되었습니다. / 아이디 : ${id}`);
-        ctx.body = true;    
+        ctx.body = true;
     }).catch((err) => {
         console.log(`데이터베이스 저장 중 에러 발생`);
         ctx.body = false;
-    });;
+        return;
+    });
 
-    
+    ctx.body = true;    
 }
 
 export const Login = async (ctx) => {

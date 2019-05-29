@@ -19,6 +19,9 @@ export const user = (sequelize, DataTypes) => {
         },
         correctInfo : {
             type : DataTypes.TEXT
+        },
+        point : {
+            type : DataTypes.INTEGER
         }
     });
 };
