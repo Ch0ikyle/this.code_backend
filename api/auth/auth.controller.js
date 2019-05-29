@@ -108,3 +108,21 @@ export const showInfo = async (ctx) => {
         "description" : user[0].description
     }
 }
+
+export const Ranking = async (ctx) => {
+    const user = await User.findAll({
+        order : [
+            ['point', 'DESC']
+        ]
+    });
+
+    let deliver = new Array();
+    user.forEach(element => {
+        deliver.push({
+            "username" : element.username,
+            "point" : element.point
+        });
+    });
+
+    ctx.body = deliver;
+}
