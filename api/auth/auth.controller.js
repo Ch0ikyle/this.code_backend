@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { User } from '../../models';
+import { generateToken, decodeToken }from '../../lib/token.js';
 // .env 파일의 환경 변수 불러오기
 import dotenv from 'dotenv';
 dotenv.config();
@@ -26,16 +27,29 @@ export const Register = async (ctx) => {
 
     // 데이터베이스에 저장할 내용을 정리하는 코드
     const id = ctx.request.body.id;
+
+    const array = new Array(10).fill(0);
+
+    const correct = {
+        "correct" : array
+    }
     
     // 데이터베이스에 값을 저장함.
     User.create({
         "id" : id,
         "password" : ctx.request.body.password,
-        "nickname" : ctx.request.body.nickname
-    });
+        "username" : ctx.request.body.username,
+        "description" : ctx.request.body.description,
+        "correctInfo" : JSON.stringify(correct)
+    }).then((result) => {
+        console.log(`새로운 회원이 저장되었습니다. / 아이디 : ${id}`);
+        ctx.body = true;    
+    }).catch((err) => {
+        console.log(`데이터베이스 저장 중 에러 발생`);
+        ctx.body = false;
+    });;
 
-    console.log(`새로운 회원이 저장되었습니다. / 아이디 : ${id}`);
-    ctx.body = true;
+    
 }
 
 export const Login = async (ctx) => {
@@ -62,8 +76,7 @@ export const Login = async (ctx) => {
     }
 
     const payload = {
-        id : founded[0].id,
-        nickname : founded[0].nickname
+        id : founded[0].id
     };
 
     let token = null;
@@ -76,4 +89,20 @@ export const Login = async (ctx) => {
     };
 
     console.log(`로그인에 성공하였습니다.`)
+}
+
+export const showInfo = async (ctx) => {
+    const token = ctx.header.token;
+    const decoded = await decodeToken(token);
+
+    const user = await User.findAll({
+        where : {
+            id : decoded.id
+        }
+    });
+
+    ctx.body = {
+        "username" : user[0].username,
+        "description" : user[0].description
+    }
 }
