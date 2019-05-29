@@ -5,6 +5,7 @@ import { user } from './user';
 import { problem } from './problem';
 import { answer } from './answer';
 import { problemlog } from './problemlog';
+import { problemcount } from './problemcount';
 
 const config = require(path.join(__dirname, '..', 'config', 'dbconfig.json'))['codeup'];
 
@@ -19,5 +20,6 @@ const User = user(sequelize, Sequelize);
 const Problem = problem(sequelize, Sequelize);
 const Answer = answer(sequelize, Sequelize);
 const ProblemLog = problemlog(sequelize, Sequelize);
+const ProblemCount = problemcount(sequelize, Sequelize);
 
-export { sequelize, Sequelize, User, Problem, Answer, ProblemLog };  
+export { sequelize, Sequelize, User, Problem, Answer, ProblemLog, ProblemCount };  
